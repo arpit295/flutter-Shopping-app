@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shopping_app/cart.dart';
@@ -13,7 +14,8 @@ class ProductOverviewScreen extends StatefulWidget {
 }
 
 class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
-  var _showOnlyFavorites = false;
+  bool _showOnlyFavorites = false;
+  final auth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +62,6 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
           Consumer<Cart>(
             builder: (context, cart, child) => CartBadge(
               value: cart.itemCount.toString(),
-              color: Colors.deepOrange,
               child: child ?? SizedBox(),
             ),
             child: IconButton(
@@ -104,7 +105,9 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
               ),
               automaticallyImplyLeading: false,
             ),
-            Divider(),
+            SizedBox(
+              height: 5,
+            ),
             ListTile(
               leading: Icon(
                 Icons.shop,
@@ -137,7 +140,23 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
                 Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (context) => OrdersDetail()));
               },
-            )
+            ),
+            Divider(),
+            ListTile(
+              leading: Icon(
+                Icons.logout,
+                color: Colors.grey,
+              ),
+              title: Text(
+                'Log Out',
+                style:
+                    TextStyle(fontWeight: FontWeight.w600, fontFamily: 'Lato'),
+              ),
+              onTap: () {
+                auth.signOut();
+                Navigator.popUntil(context, (route) => route.isFirst);
+              },
+            ),
           ],
         ),
       ),

@@ -37,6 +37,19 @@ class ProductItem extends StatelessWidget {
             ),
             onPressed: () {
               cart.addItem(product.id, product.price.toString(), product.title);
+              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text('Added item to cart!'),
+                duration: Duration(seconds: 2),
+                backgroundColor: Colors.green,
+                action: SnackBarAction(
+                  label: 'UNDO',
+                  onPressed: () {
+                    cart.removeSingleItem(product.id);
+                  },
+                  textColor: Colors.white,
+                ),
+              ));
             },
           ),
           backgroundColor: Colors.black87,
@@ -52,13 +65,15 @@ class ProductItem extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                     builder: (context) => ProductDetailScreen(
-                          title: product.title,
                           productId: product.id,
                         )));
           },
-          child: Image(
-            image: NetworkImage(product.imageUrl),
-            fit: BoxFit.cover,
+          child: Hero(
+            tag: product.id,
+            child: Image(
+              image: NetworkImage(product.imageUrl),
+              fit: BoxFit.cover,
+            ),
           ),
         ),
       ),

@@ -3,15 +3,14 @@ import 'package:provider/provider.dart';
 import 'package:shopping_app/products.dart';
 
 class ProductDetailScreen extends StatelessWidget {
-  final String title;
   final String productId;
-  ProductDetailScreen({required this.title, required this.productId});
+  ProductDetailScreen({required this.productId});
 
   @override
   Widget build(BuildContext context) {
-    final selectedItem = Provider.of<Products>(context, listen: false)
-        .items
-        .firstWhere((prod) => prod.id == productId);
+    final productData = Provider.of<Products>(context, listen: false);
+    final selectedItem =
+        productData.items.firstWhere((prod) => prod.id == productId);
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -22,9 +21,12 @@ class ProductDetailScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Image(
-              image: NetworkImage(selectedItem.imageUrl),
-              fit: BoxFit.cover,
+            Hero(
+              tag: selectedItem.id,
+              child: Image(
+                image: NetworkImage(selectedItem.imageUrl),
+                fit: BoxFit.cover,
+              ),
             ),
             SizedBox(
               height: 10,
@@ -42,7 +44,7 @@ class ProductDetailScreen extends StatelessWidget {
             ),
             Text(
               selectedItem.description,
-              style: TextStyle(fontFamily: 'Lato', fontWeight: FontWeight.w500),
+              style: TextStyle(fontFamily: 'Lato', fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
               softWrap: true,
             )

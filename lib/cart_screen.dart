@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shopping_app/cart.dart';
 import 'package:shopping_app/orders.dart';
-import 'cart_item.dart' as ci;
+import 'cart_item.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
@@ -10,6 +10,7 @@ class CartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cart = Provider.of<Cart>(context);
+    final orderData = Provider.of<Orders>(context, listen: false);
 
     return Scaffold(
       appBar: AppBar(
@@ -46,7 +47,7 @@ class CartScreen extends StatelessWidget {
                   ),
                   TextButton(
                     onPressed: () {
-                      Provider.of<Orders>(context, listen: false).addOrder(
+                      orderData.addOrder(
                           cart.cartitems.values.toList(), cart.totalAmount);
                       cart.clearCart();
                     },
@@ -69,7 +70,7 @@ class CartScreen extends StatelessWidget {
             child: ListView.builder(
               itemCount: cart.cartitems.length,
               itemBuilder: (context, index) {
-                return ci.CartItem(
+                return CartItem(
                   title: cart.cartitems.values.toList()[index].title,
                   id: cart.cartitems.values.toList()[index].id,
                   price: cart.cartitems.values.toList()[index].price,

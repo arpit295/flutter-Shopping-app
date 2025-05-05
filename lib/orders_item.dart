@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 import 'orders.dart';
 
 class OrdersItem extends StatefulWidget {
-  final OrderItem order;
+  final OrderShow order;
 
   OrdersItem({required this.order});
 
@@ -14,7 +14,7 @@ class OrdersItem extends StatefulWidget {
 }
 
 class _OrdersItemState extends State<OrdersItem> {
-  var _expanded = false;
+  bool _expanded = false;
 
   @override
   Widget build(BuildContext context) {

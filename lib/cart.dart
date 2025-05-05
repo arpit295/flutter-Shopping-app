@@ -1,12 +1,13 @@
 import 'package:flutter/foundation.dart';
+import 'cart_item.dart';
 
-class CartItem {
+class CartShow {
   final String id;
   final String title;
   final int quantity;
   final double price;
 
-  CartItem(
+  CartShow(
       {required this.title,
       required this.id,
       required this.price,
@@ -14,9 +15,9 @@ class CartItem {
 }
 
 class Cart with ChangeNotifier {
-  final Map<String, CartItem> _cartitems = {};
+  final Map<String, CartShow> _cartitems = {};
 
-  Map<String, CartItem> get cartitems => _cartitems;
+  Map<String, CartShow> get cartitems => _cartitems;
 
   int get itemCount => _cartitems.length;
 
@@ -32,15 +33,16 @@ class Cart with ChangeNotifier {
     if (_cartitems.containsKey(productId)) {
       _cartitems.update(
           productId,
-          (existingCartItem) => CartItem(
-              title: existingCartItem.title,
-              id: existingCartItem.id.toString(),
-              price: existingCartItem.price,
-              quantity: existingCartItem.quantity + 1));
+          (existingCartItem) => CartShow(
+                title: existingCartItem.title,
+                id: existingCartItem.id.toString(),
+                price: existingCartItem.price,
+                quantity: existingCartItem.quantity + 1,
+              ));
     } else {
       _cartitems.putIfAbsent(
           productId,
-          () => CartItem(
+          () => CartShow(
               title: title,
               id: DateTime.now().toString(),
               price: double.parse(price),
@@ -56,6 +58,22 @@ class Cart with ChangeNotifier {
 
   void clearCart() {
     _cartitems.clear();
+    notifyListeners();
+  }
+
+  void removeSingleItem(String productId) {
+    if (_cartitems[productId]!.quantity > 1) {
+      _cartitems.update(
+          productId,
+          (existingCartItem) => CartShow(
+                quantity: existingCartItem.quantity - 1,
+                price: existingCartItem.price,
+                id: existingCartItem.id,
+                title: existingCartItem.title,
+              ));
+    } else {
+      _cartitems.remove(productId);
+    }
     notifyListeners();
   }
 }

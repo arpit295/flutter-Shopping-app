@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shopping_app/orders.dart' show Orders;
@@ -5,7 +6,9 @@ import 'package:shopping_app/orders_item.dart';
 import 'package:shopping_app/product_overview_screen.dart';
 
 class OrdersDetail extends StatelessWidget {
-  const OrdersDetail({super.key});
+  OrdersDetail({super.key});
+
+  final auth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +37,9 @@ class OrdersDetail extends StatelessWidget {
               ),
               automaticallyImplyLeading: false,
             ),
-            Divider(),
+            SizedBox(
+              height: 5,
+            ),
             ListTile(
               leading: Icon(
                 Icons.shop,
@@ -66,6 +71,22 @@ class OrdersDetail extends StatelessWidget {
               onTap: () {
                 Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (context) => OrdersDetail()));
+              },
+            ),
+            Divider(),
+            ListTile(
+              leading: Icon(
+                Icons.logout,
+                color: Colors.grey,
+              ),
+              title: Text(
+                'Log Out',
+                style:
+                    TextStyle(fontWeight: FontWeight.w600, fontFamily: 'Lato'),
+              ),
+              onTap: () {
+                auth.signOut();
+                Navigator.popUntil(context, (route) => route.isFirst);
               },
             )
           ],
